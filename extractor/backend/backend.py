@@ -40,25 +40,17 @@ matcher.add("PRICE", PRICE_PATTERNS)
 
 # Discount token patterns — case-insensitive via LOWER
 DISCOUNT_PATTERNS = [
-    # "20% off" / "20% OFF" / "20 % off"
-    [{"TEXT": {"REGEX": r"^\d{1,3}$"}}, {"TEXT": "%"}, {"LOWER": {"IN": ["off", "discount", "sale", "savings", "saving"]}}],
-    [{"TEXT": {"REGEX": r"^\d{1,3}%$"}}, {"LOWER": {"IN": ["off", "discount", "sale", "savings", "saving"]}}],
-    # "off 20%"
-    [{"LOWER": "off"}, {"TEXT": {"REGEX": r"^\d{1,3}%?$"}}],
-    # "save 30%" / "save $10"
-    [{"LOWER": {"IN": ["save", "saving", "savings"]}}, {"TEXT": {"REGEX": r"^[\$£€₹]?\d+(\.\d+)?%?$"}}],
-    # "flat 10% off"
-    [{"LOWER": "flat"}, {"TEXT": {"REGEX": r"^\d{1,3}%?$"}}, {"LOWER": "off", "OP": "?"}],
-    # "extra 15% off"
-    [{"LOWER": "extra"}, {"TEXT": {"REGEX": r"^\d{1,3}%?$"}}, {"LOWER": "off", "OP": "?"}],
-    # "get 20% off"
-    [{"LOWER": "get"}, {"TEXT": {"REGEX": r"^\d{1,3}%$"}}, {"LOWER": "off"}],
-    # "buy 2 get 1 free"
-    [{"LOWER": "buy"}, {"TEXT": {"REGEX": r"^\d+$"}}, {"LOWER": "get"}, {"TEXT": {"REGEX": r"^\d+$"}}, {"LOWER": "free", "OP": "?"}],
-    # "was $X now $Y" — price drop signal
-    [{"LOWER": "was"}, {"TEXT": {"REGEX": r"^[\$£€₹¥]?\d+"}}, {"LOWER": {"IN": ["now", ","]}, "OP": "?"}],
-    # standalone "% off" when preceded by number in hints
-    [{"TEXT": {"REGEX": r"^\d{1,3}%$"}}],
+    # Captures "-80%" specifically
+    [
+        {"TEXT": {"REGEX": r"^-\d{1,3}$"}}, # Must start with '-' followed by 1-3 digits
+        {"TEXT": "%"},
+        {"LOWER": {"IN": ["off", "discount"]}, "OP": "?"} # Optional context
+    ],
+    # Captures "-80% OFF" as a single token if the site joins them
+    [
+        {"TEXT": {"REGEX": r"^-\d{1,3}%$"}}, 
+        {"LOWER": {"IN": ["off", "discount"]}, "OP": "?"}
+    ]
 ]
 matcher.add("DISCOUNT", DISCOUNT_PATTERNS)
 
@@ -103,41 +95,20 @@ PRICE_REGEX = re.compile(
 DISCOUNT_REGEX = re.compile(
     r"""
     (?:
-        # "20% off" / "20 % OFF" / "20% discount"
-        \d{1,3}\s?%\s*(?:off|discount|sale|savings?|coupon)?  |
+        # "-20% off" / "-20 % OFF" (Mandatory minus for actual discount badges)
+        -\d{1,3}\s?%\s*(?:off|discount|sale|savings?)?  |
 
-        # "off 20%" / "off $10"
+        # "off 20%" / "off $10" (Keep as is, usually specific to price area)
         off\s+(?:\d{1,3}\s?%|[\$£€₹]\s?\d+(?:\.\d+)?)  |
 
         # "save $10" / "save 30%"
         (?:save|saving|savings)\s+(?:[\$£€₹¥]?\s?\d+(?:[,.]\d+)?|\d{1,3}\s?%)  |
 
-        # "flat 10% off" / "flat 500 off"
-        flat\s+(?:\d{1,3}\s?%|\d+)\s*(?:off)?  |
-
-        # "extra 15% off"
-        extra\s+\d{1,3}\s?%\s*(?:off)?  |
-
-        # "get 20% off"
-        get\s+\d{1,3}\s?%\s*off  |
-
-        # "buy 1 get 1 free" / "buy 2 get 1"
-        buy\s+\d+\s*get\s*\d+\s*(?:free)?  |
-
-        # "was $50 now $30" / "was $50, now $30"
+        # "was $50 now $30" (The gold standard for your Fiscal Table)
         was\s+[\$£€₹¥]?\s?\d+(?:[,.]\d+)?\s*(?:,\s*)?now\s+[\$£€₹¥]?\s?\d+(?:[,.]\d+)?  |
 
-        # "originally $X" / "regular price $X"
-        (?:original(?:ly)?|regular\s+price|mrp|rrp)\s*:?\s*[\$£€₹¥]?\s?\d+(?:[,.]\d+)?  |
-
-        # "price drop" / "price cut"
-        price\s+(?:drop|cut|slash|reduction)  |
-
-        # coupon / voucher / promo code mentions
-        (?:coupon|voucher|promo(?:tion)?)\s*(?:code)?\s*:?\s*\w*  |
-
-        # standalone "X% OFF" (all caps common on badges)
-        \d{1,3}%\s*OFF
+        # standalone "-X% OFF" (Common on Daraz/Amazon badges)
+        -\d{1,3}%\s*OFF
     )
     """,
     re.VERBOSE | re.IGNORECASE
