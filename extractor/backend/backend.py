@@ -215,16 +215,26 @@ def regex_discounts(hints: list, full_text: str) -> set:
 
     return results
 
-
 def regex_urgency(hints: list, full_text: str) -> set:
     results = set()
-    combined = " ".join(hints) + " " + full_text[:6000]
-    for m in URGENCY_REGEX.finditer(combined):
-        v = m.group().strip()
-        if len(v) >= 4:
-            results.add(v.lower().capitalize())
+    
+    for hint in hints:
+        if not hint:
+            continue
+        # Test the hint string directly against the pattern
+        if URGENCY_REGEX.search(hint) or "sold out" in hint.lower():
+            # Strip surrounding spaces but PRESERVE original punctuation/capitalization 
+            # so it maps natively into spreadsheet rows.
+            results.add(hint.strip())
+            
+    # Fallback safety net scanner (only searches the DOM if the class lookup array was empty)
+    if not results:
+        for m in URGENCY_REGEX.finditer(full_text[:6000]):
+            v = m.group().strip()
+            if len(v) >= 4:
+                results.add(v) # Preserves exact casing captured by raw match indexes
+                
     return results
-
 
 def build_brands(brand_hints, image_alts, ner_brands, title) -> list:
     seen = set()
