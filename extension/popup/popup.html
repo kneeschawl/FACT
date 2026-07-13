@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Global Application Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="app-logo"><span>F</span></div>
+      <h1>FACT</h1>
+    </div>
+    <button class="settings-btn" id="settingsBtn" title="Configuration Panel">⚙</button>
+  </header>
+
+  <main class="viewport-container">
+    <!-- View 1: Form Collection Landing View -->
+    <section id="landingView" class="view-panel active">
+      <h2 class="view-title">Product Details from this page</h2>
+      <form id="auditForm" class="input-form">
+        <div class="form-group">
+          <label for="productId">Product Id:</label>
+          <input type="text" id="productId" name="productId" placeholder="Scanning system id...">
+        </div>
+        <div class="form-group">
+          <label for="productName">Product Name:</label>
+          <input type="text" id="productName" name="productName" placeholder="Scanning item descriptor...">
+        </div>
+        <div class="form-group">
+          <label for="anchorPrice">Anchor Price:</label>
+          <input type="number" id="anchorPrice" name="anchorPrice" step="0.01" placeholder="Original strikethrough cost">
+        </div>
+        <div class="form-group">
+          <label for="discountPercentage">Discount Percentage (if any):</label>
+          <input type="number" id="discountPercentage" name="discountPercentage" step="0.01" placeholder="Advertised markdown scale">
+        </div>
+        <div class="form-group">
+          <label for="discountedPrice">Discounted Price (if any):</label>
+          <input type="number" id="discountedPrice" name="discountedPrice" step="0.01" placeholder="Current live transaction value">
+        </div>
+        <div class="form-group">
+          <label for="urgencyText">Urgency Text (if any):</label>
+          <input type="text" id="urgencyText" name="urgencyText" placeholder="Detected countdown or quantity assertions">
+        </div>
+        <button type="submit" class="primary-btn" id="submitBtn">Generate Report</button>
+      </form>
+    </section>
+
+    <!-- View 2: Analysis Output View -->
+    <section id="outputView" class="view-panel">
+      <h2 class="view-title centered">Final Report</h2>
+      
+      <!-- Primary Core Risk Rating Metric -->
+      <div class="metric-section">
+        <h3>Deceptive Score</h3>
+        <div class="gauge-wrapper">
+          <div id="mainGaugeContainer"></div>
+          <div class="info-trigger" id="legendTrigger">i</div>
+          
+          <!-- Context Legend Layout Layer -->
+          <div class="legend-card" id="legendCard">
+            <div class="legend-row"><span class="swatch safe"></span> 0-3 Less Deceptive</div>
+            <div class="legend-row"><span class="swatch warning"></span> 3-7 Moderately Deceptive</div>
+            <div class="legend-row"><span class="swatch danger"></span> 7-10 Highly Deceptive</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historical Temporal Matrix Mapping Layer -->
+      <div class="metric-section line-top">
+        <h3>History Graph:</h3>
+        <div class="chart-container" id="historyChartContainer"></div>
+      </div>
+
+      <!-- Segmented Breakdown Parameter Matrices -->
+      <div class="metric-section line-top">
+        <h3>Deceptive Score Breakdown</h3>
+        <div class="breakdown-grid">
+          <div class="breakdown-item">
+            <h4>Urgency Severity Score</h4>
+            <div class="gauge-wrapper compact">
+              <div id="urgencyGaugeContainer"></div>
+              <div class="info-trigger static" title="Measures temporal NLP artificial scarcity constructs.">i</div>
+            </div>
+          </div>
+          <div class="breakdown-item line-left">
+            <h4>Inflation Score</h4>
+            <div class="gauge-wrapper compact">
+              <div id="inflationGaugeContainer"></div>
+              <div class="info-trigger static" title="Cross-references live retail pricing against historical database matrix.">i</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Countermeasure Actions Framework -->
+      <div class="action-section line-top">
+        <h3>Do you want to file a complaint?</h3>
+        <div class="btn-group">
+          <button class="action-btn positive" id="complaintYesBtn">Yes</button>
+          <button class="action-btn negative" id="complaintNoBtn">No</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Shared Footer Section -->
+  <footer class="app-footer">
+    <span class="footer-label">Contact Us:</span>
+    <div class="social-links">
+      <a href="https://github.com" target="_blank" class="icon-link" title="GitHub Infrastructure Repository">📁</a>
+      <a href="mailto:info@fact.gov.np" class="icon-link" title="Direct Engineering Liaison Core">✉</a>
+      <a href="https://linkedin.com" target="_blank" class="icon-link" title="Professional Communications Stream">💼</a>
+    </div>
+  </footer>
+
+  <!-- Script Pipeline Architecture Binding -->
+  <script src="../lib/gauge.js"></script>
+  <script src="../lib/chart.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
