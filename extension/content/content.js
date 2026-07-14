@@ -4,7 +4,37 @@ function parsePriceString(raw) {
   const match = cleaned.match(/\d+(\.\d+)?/);
   return match ? match[0] : "";
 }
- 
+
+const URGENCY_PATTERNS = [
+  /almost sold out/i,
+  /sold out soon/i,
+  /only\s*\d+\s*(left|item|piece|unit)/i,
+  /hurry/i,
+  /limited\s*(stock|stocks|quantity|time|edition)/i,
+  /selling fast/i,
+  /low(\s+in)?\s*stock/i,
+  /last\s*chance/i,
+  /ends?\s*in\s*\d/i,
+  /flash\s*sale/i,
+  // /buy\s*now/i,
+  /while\s*(stock|supplies)\s*last/i,
+];
+
+function findUrgencyTextByPattern() {
+  // Leaf elements only (no children) — badges/labels are short single-purpose
+  // nodes, so this avoids matching giant blocks of unrelated body text.
+  const candidates = document.querySelectorAll("div, span, p, small, a, b, strong");
+  for (const el of candidates) {
+    if (el.children.length > 0) continue;
+    const text = el.innerText?.trim();
+    if (!text || text.length > 120) continue;
+    if (URGENCY_PATTERNS.some((re) => re.test(text))) {
+      return text;
+    }
+  }
+  return null;
+}
+
 function scrapeProductDetails() {
   const fullBodyText = document.body.innerText || "";
   const pageTitle = document.title || "";
@@ -59,6 +89,12 @@ function scrapeProductDetails() {
   if (urgencyNode) {
     details.urgencyText = urgencyNode.innerText.trim();
     details.urgencyHints.push(urgencyNode.innerText.trim());
+  } else {
+    const patternMatch = findUrgencyTextByPattern();
+    if (patternMatch) {
+      details.urgencyText = patternMatch;
+      details.urgencyHints.push(patternMatch);
+    }
   }
 
   return details;
