@@ -13,8 +13,9 @@
     "*://*.sastodeal.com/*"
   ],
   "background": {
-    "service_worker": "background/service_worker.js"
-  },
+  "service_worker": "background/service_worker.js",
+  "scripts": ["background/service_worker.js"]
+},
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
