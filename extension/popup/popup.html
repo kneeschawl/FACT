@@ -11,7 +11,18 @@
       <div class="app-logo"><span>F</span></div>
       <h1>FACT</h1>
     </div>
-    <button class="settings-btn" id="settingsBtn" title="Configuration Panel">⚙</button>
+    <div class="settings-wrapper">
+      <button class="settings-btn" id="settingsBtn" title="Configuration Panel">⚙</button>
+      <div class="settings-panel" id="settingsPanel">
+        <div class="settings-row">
+          <span>Dark mode</span>
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main class="viewport-container">

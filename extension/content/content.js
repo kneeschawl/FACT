@@ -1,3 +1,10 @@
+function parsePriceString(raw) {
+  if (!raw) return "";
+  const cleaned = raw.replace(/,/g, "");
+  const match = cleaned.match(/\d+(\.\d+)?/);
+  return match ? match[0] : "";
+}
+ 
 function scrapeProductDetails() {
   const fullBodyText = document.body.innerText || "";
   const pageTitle = document.title || "";
@@ -34,9 +41,9 @@ function scrapeProductDetails() {
     const pctNode = document.querySelector(".pdp-product-price__discount");
     
     details.productName = titleNode ? titleNode.innerText.trim() : pageTitle;
-    details.discountedPrice = discPriceNode ? discPriceNode.innerText.replace(/[^0-9.]/g, "") : "";
-    details.anchorPrice = origPriceNode ? origPriceNode.innerText.replace(/[^0-9.]/g, "") : "";
-    details.discountPercentage = pctNode ? pctNode.innerText.replace(/[^0-9]/g, "") : "";
+    details.discountedPrice = discPriceNode ? parsePriceString(discPriceNode.innerText) : "";
+    details.anchorPrice = origPriceNode ? parsePriceString(origPriceNode.innerText) : "";
+    details.discountPercentage = pctNode ? parsePriceString(pctNode.innerText) : "";
     
     if (discPriceNode) details.priceHints.push(discPriceNode.innerText);
     if (origPriceNode) details.priceHints.push(origPriceNode.innerText);

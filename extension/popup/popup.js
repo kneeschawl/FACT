@@ -9,8 +9,38 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const complaintYesBtn = document.getElementById("complaintYesBtn");
   const complaintNoBtn = document.getElementById("complaintNoBtn");
+
+  const settingsBtn = document.getElementById("settingsBtn");
+  const settingsPanel = document.getElementById("settingsPanel");
+  const darkModeToggle = document.getElementById("darkModeToggle");
   
   let generatedTemplate = "";
+
+  // 0. Theme: load saved preference (falls back to light) and apply immediately
+  chrome.storage.local.get(["factTheme"], ({ factTheme }) => {
+    const isDark = factTheme === "dark";
+    document.body.dataset.theme = isDark ? "dark" : "light";
+    darkModeToggle.checked = isDark;
+  });
+
+  settingsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    settingsPanel.classList.toggle("visible");
+  });
+
+  // Clicking anywhere else closes the settings panel (same pattern as the legend)
+  document.addEventListener("click", () => {
+    settingsPanel.classList.remove("visible");
+  });
+
+  // Prevent clicks inside the panel (e.g. on the toggle) from closing it immediately
+  settingsPanel.addEventListener("click", (e) => e.stopPropagation());
+
+  darkModeToggle.addEventListener("change", () => {
+    const isDark = darkModeToggle.checked;
+    document.body.dataset.theme = isDark ? "dark" : "light";
+    chrome.storage.local.set({ factTheme: isDark ? "dark" : "light" });
+  });
 
   // 1. Core Runtime Processing: Request Content Scraping Framework
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
