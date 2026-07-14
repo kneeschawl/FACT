@@ -1,2 +1,6 @@
 .venv/
 dark_pattern_model.pt
+# Ignore database backup files
+*.sql
+!schema.sql
+!seed_data.sql
