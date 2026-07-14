@@ -68,22 +68,37 @@ function scrapePageData() {
   });
   data.brand_hints = [...new Set(data.brand_hints)].slice(0, 10);
 
-  // Urgency / FOMO / CTA text
-  const urgencySelectors = [
-    "[class*='urgent']", "[class*='hurry']",
-    "[class*='countdown']", "[class*='timer']",
-    "[class*='limited']", "[class*='stock']",
-    "[class*='cta']", "[class*='banner']",
-    "[class*='flash']", "[class*='deal']"
-  ];
-  data.urgency_hints = [];
-  urgencySelectors.forEach(sel => {
+// Urgency / FOMO / CTA text
+const urgencySelectors = [
+  "[class*='urgent']", "[class*='hurry']",
+  "[class*='countdown']", "[class*='timer']",
+  "[class*='limited']", "[class*='stock']",
+  "[class*='cta']", "[class*='banner']",
+  "[class*='flash']", "[class*='deal']",
+  // --- ADDED FOR EXPERIMENT TARGETS ---
+  ".quantity-content-default",            // Exact target class discovered via inspection
+  "[class*='quantity-content']",          // Substring matching variations of this container
+  "[class*='product-info-stock']",        // Common e-commerce desktop structures
+  ".pdp-mod-product-info-stock"           // Standard regional marketplace layout wrapper
+];
+
+data.urgency_hints = [];
+urgencySelectors.forEach(sel => {
+  try {
     document.querySelectorAll(sel).forEach(el => {
       const t = el.innerText?.trim();
-      if (t) data.urgency_hints.push(t);
+      // Ensure we catch valid text and don't push massive page text blobs accidentally
+      if (t && t.length > 0 && t.length < 150) { 
+        data.urgency_hints.push(t);
+      }
     });
-  });
-  data.urgency_hints = [...new Set(data.urgency_hints)].slice(0, 10);
+  } catch (err) {
+    console.error(`Selector processing exception for (${sel}):`, err);
+  }
+});
+
+// Remove duplicates and limit the payload slice array to 10 indices
+data.urgency_hints = [...new Set(data.urgency_hints)].slice(0, 10);
 
   // Product images alt text (often contains brand/product info)
   data.image_alts = [];
