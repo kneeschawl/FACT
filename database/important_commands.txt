@@ -1,0 +1,35 @@
+==========================================================================================
+                      LOCAL MYSQL/MARIADB CHEAT SHEET (PORT: 3307)
+==========================================================================================
+
+1. RUN MARIADB INTERACTIVE TERMINAL
+C:\xampp\mysql\bin\mysql.exe -u root -P 3307
+-----> Use this to log directly into the MySQL prompt to type SQL queries manually.
+
+2. RUN SCHEMA CREATION SCRIPT
+C:\xampp\mysql\bin\mysql.exe -u root -P 3307 -e "source schema.sql"
+-----> Runs your 'schema.sql' file to build the database structure and tables.
+
+3. RUN SEED DATA SCRIPT
+C:\xampp\mysql\bin\mysql.exe -u root -P 3307 -e "source seed_data.sql"
+-----> Inserts the mock/dummy records from 'seed_data.sql' into your tables.
+
+4. VIEW/SELECT SCALED PRODUCTS
+C:\xampp\mysql\bin\mysql.exe -u root -P 3307 -e "USE fiscal_db; SELECT id, product_name, actual_price, discounted_price, claimed_anchor FROM scraped_products;"
+-----> Runs a quick select query directly from your terminal to verify data.
+
+5. ALTER ATTRIBUTES (E.G., CONVERT VARCHAR TO DECIMAL)
+C:\xampp\mysql\bin\mysql.exe -u root -P 3307 -e "USE fiscal_db; ALTER TABLE scraped_products MODIFY claimed_anchor DECIMAL(10, 2);"
+-----> Directly alters column datatypes or structures without recreating the table.
+
+6. BACKUP DATABASE (DUMP DATABASE TO SQL FILE)
+C:\xampp\mysql\bin\mysqldump.exe -u root -P 3307 fiscal_db > fiscal_backup.sql
+-----> Exports your entire database structure and records into a single backup SQL file.
+
+7. RESTORE DATABASE FROM A BACKUP FILE
+C:\xampp\mysql\bin\mysql.exe -u root -P 3307 fiscal_db < fiscal_backup.sql
+-----> Imports a previously backed-up SQL file to completely restore your database.
+
+8. IMPORT DATA DIRECTLY FROM A CSV FILE
+C:\xampp\mysql\bin\mysqlimport.exe -u root -P 3307 --ignore-lines=1 --fields-terminated-by=, --fields-enclosed-by="\"" --lines-terminated-by="\n" fiscal_db scraped_products.csv
+-----> Fast command-line utility to dump raw CSV data into your SQL tables.
