@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const settingsPanel = document.getElementById("settingsPanel");
   const darkModeToggle = document.getElementById("darkModeToggle");
   
+  // Pipeline application states across loops
+  let cachedResultData = null;
   let generatedTemplate = "";
 
   // 0. Theme: load saved preference (falls back to light) and apply immediately
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 2. Legend Visbility Interactions
+  // 2. Legend Visibility Interactions
   legendTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
     legendCard.classList.toggle("visible");
@@ -78,14 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.disabled = true;
     submitBtn.innerText = "Auditing Pipeline...";
 
-    // Package payload payload structures
+    const currentUrgencyText = document.getElementById("urgencyText").value || "";
+
+    // Comprehensive network payload structured mapping to FastAPI documentation bounds
     const payload = {
       product_id: document.getElementById("productId").value,
       product_name: document.getElementById("productName").value,
       anchor_price: parseFloat(document.getElementById("anchorPrice").value) || 0,
       discount_percentage: parseFloat(document.getElementById("discountPercentage").value) || 0,
       discounted_price: parseFloat(document.getElementById("discountedPrice").value) || 0,
-      urgency_text: document.getElementById("urgencyText").value
+      urgency_text: currentUrgencyText,
+      urgency_hints: currentUrgencyText ? [currentUrgencyText] : [],
+      full_text: document.getElementById("productName").value || ""
     };
 
     try {
@@ -99,8 +105,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) throw new Error("Backend connection returned internal warning.");
       const result = await response.json();
 
-      // Store pre-populated formal legal template configuration locally
+      // Cache structural records securely for internal dynamic generation flows
+      cachedResultData = result;
       generatedTemplate = result.complaint_template || "";
+
+      // Clean old states out if user processes sequential targets on same instantiation
+      document.getElementById("complaintFormPanel").style.display = "none";
+      document.getElementById("userDeceptionDescription").value = "";
 
       // Swap panel visibility matrices
       landingView.classList.remove("active");
@@ -121,49 +132,86 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.disabled = false;
       submitBtn.innerText = "Generate Report";
     }
-
-    // // --- FRONTEND MOCK DATA TEST INSERT ---
-    // const result = {
-    //   "status": "success",
-    //   "deceptive_score": 9.0,
-    //   "urgency_score": 8.7,
-    //   "inflation_score": 7.2,
-    //   "price_history": [180, 310, 240, 80, 210, 215, 185],
-    //   "complaint_template": "To,\nThe Department of Commerce, Supplies and Consumer Protection (DoCSCP)\nBabarmahal, Kathmandu, Nepal.\n\nSubject: Formal Complaint Against Deceptive Pricing under the Consumer Protection Act 2075.\n\nDear Sir/Madam,\nI am writing to log an official complaint regarding deceptive anchor pricing on the product listed under ID: 987654321. The vendor has artificially inflated the baseline value to fabricate false markdown claims..."
-    // };
-
-    // // The remaining UI layout code stays exactly as it is:
-    // generatedTemplate = result.complaint_template || "";
-    // landingView.classList.remove("active");
-    // outputView.classList.add("active");
-
-    // new FACTGauge("mainGaugeContainer", { score: result.deceptive_score, size: 120, strokeWidth: 10 });
-    // new FACTGauge("urgencyGaugeContainer", { score: result.urgency_score, size: 70, strokeWidth: 7 });
-    // new FACTGauge("inflationGaugeContainer", { score: result.inflation_score, size: 70, strokeWidth: 7 });
-    // new FACTChart("historyChartContainer", result.price_history);
-    // // --- END MOCK DATA INSERT ---
   });
 
-  // 4. Automated Legal Complaints Generation Pipeline
+  // ==========================================
+  // 4. Automated Legal Complaints Generation Pipeline (Embedded Panel Layout)
+  // ==========================================
   complaintYesBtn.addEventListener("click", () => {
-    if (!generatedTemplate) {
-      alert("No complaint verification payload detected.");
+    if (!generatedTemplate || !cachedResultData) {
+      alert("No active audit assessment detected to construct a complaint format.");
       return;
     }
     
-    // Package plain text metrics as downloadable client filesystem buffers
-    const blob = new Blob([generatedTemplate], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `DoCSCP_Complaint_${document.getElementById("productId").value || "FACT"}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const targetProdId = document.getElementById("productId").value || "N/A";
+    const targetProdName = document.getElementById("productName").value || "Unknown Product";
+    const currentAnchorPrice = document.getElementById("anchorPrice").value || "0.0";
+    const currentDiscountedPrice = document.getElementById("discountedPrice").value || "0.0";
+    
+    // Auto-assemble structural context summary metrics for read-only tracking element
+    const metaSummary = 
+      `Product Reference ID: ${targetProdId}\n` +
+      `Product Name: ${targetProdName}\n` +
+      `Deception Rating: ${cachedResultData.deceptive_score}/10 | Urgency Score: ${cachedResultData.urgency_score}/10\n` +
+      `Listed Anchor Baseline: Rs. ${currentAnchorPrice} | Scraped Price: Rs. ${currentDiscountedPrice}`;
+      
+    // Expose layout layer components within user viewport matrix
+    document.getElementById("complaintPrefilledMeta").value = metaSummary;
+    document.getElementById("complaintFormPanel").style.display = "block";
+    
+    // Smooth navigation viewport tracking repositioning
+    document.getElementById("complaintFormPanel").scrollIntoView({ behavior: 'smooth' });
   });
 
   complaintNoBtn.addEventListener("click", () => {
     window.close();
+  });
+
+  // Final Action Handler: Packages data payloads along with interactive description blocks
+  document.getElementById("finalSubmitComplaintBtn").addEventListener("click", async () => {
+    const manualEntryDescription = document.getElementById("userDeceptionDescription").value.trim();
+    
+    if (!manualEntryDescription) {
+      alert("Please provide a brief manual description of the deceptive event before finalizing the regulatory submission.");
+      return;
+    }
+    
+    // Append contextual user text to system calculated report matrix blocks
+    const completeFinalDossierText = 
+      `${generatedTemplate}\n\n` +
+      `==================================================\n` +
+      `ADDITIONAL CONSUMER EYEWITNESS STATEMENT:\n` +
+      `${manualEntryDescription}\n` +
+      `==================================================`;
+      
+    try {
+      const actionBtn = document.getElementById("finalSubmitComplaintBtn");
+      actionBtn.disabled = true;
+      actionBtn.innerText = "Transmitting to Department Logs...";
+
+      // Pipe to your dedicated FastAPI backend submission endpoint
+      const reportResponse = await fetch("http://localhost:8000/api/v1/complaints/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_id: document.getElementById("productId").value,
+          compiled_complaint_text: completeFinalDossierText,
+          user_comments: manualEntryDescription
+        })
+      });
+
+      if (reportResponse.ok) {
+        alert("Success! Your comprehensive consumer complaint dossier has been officially recorded and submitted to the department registry.");
+        window.close();
+      } else {
+        throw new Error("Target registry endpoint rejected data serialization.");
+      }
+    } catch (err) {
+      console.error("Transmission failure: ", err);
+      alert("Submission Error: Backend system could not transmit report. Check local hosting status.");
+    } finally {
+      document.getElementById("finalSubmitComplaintBtn").disabled = false;
+      document.getElementById("finalSubmitComplaintBtn").innerText = "Submit Form to Department";
+    }
   });
 });

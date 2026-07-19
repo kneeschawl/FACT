@@ -1,10 +1,16 @@
+import os
 import torch
 import numpy as np
 from transformers import DistilBertTokenizerFast
 from dark_pattern_classifier import DarkPatternScorer, predict_score, clean_text
 
 MODEL_NAME = "distilbert-base-uncased"
-SAVE_PATH  = "dark_pattern_model.pt"
+
+# --- Dynamic Path Resolution Fix ---
+# This figures out the folder where inference.py lives, then looks inside it
+BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
+SAVE_PATH  = os.path.join(BASE_DIR, "dark_pattern_model.pt")
+
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 tokenizer = DistilBertTokenizerFast.from_pretrained(MODEL_NAME)

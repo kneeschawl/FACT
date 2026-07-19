@@ -4,3 +4,6 @@ dark_pattern_model.pt
 *.sql
 !schema.sql
 !seed_data.sql
+__pycache__
+.env
+*.csv

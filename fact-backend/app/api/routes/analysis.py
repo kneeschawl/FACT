@@ -4,11 +4,13 @@ from app.pipeline.pipeline_manager import execute_analysis_pipeline
 
 router = APIRouter()
 
-@router.post("/analysis", response_model=AnalysisResponse)
+@router.post("/analysis")
 async def analyze_product(payload: AnalysisPayload):
     try:
-        # Passes the payload directly into your orchestration pipeline manager
-        result = await execute_analysis_pipeline(payload)
-        return result
+        return await execute_analysis_pipeline(payload)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
+        print("\n=== CRITICAL PIPELINE BREAKDOWN ===")
+        traceback.print_exc()
+        print("===================================\n")
+        raise e
