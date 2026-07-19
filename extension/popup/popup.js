@@ -88,60 +88,60 @@ document.addEventListener("DOMContentLoaded", () => {
       urgency_text: document.getElementById("urgencyText").value
     };
 
-    // try {
-    //   // Connect to FastAPI microservices configuration
-    //   const response = await fetch("http://localhost:8000/api/v1/analysis", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(payload)
-    //   });
+    try {
+      // Connect to FastAPI microservices configuration
+      const response = await fetch("http://localhost:8000/api/v1/analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-    //   if (!response.ok) throw new Error("Backend connection returned internal warning.");
-    //   const result = await response.json();
+      if (!response.ok) throw new Error("Backend connection returned internal warning.");
+      const result = await response.json();
 
-    //   // Store pre-populated formal legal template configuration locally
-    //   generatedTemplate = result.complaint_template || "";
+      // Store pre-populated formal legal template configuration locally
+      generatedTemplate = result.complaint_template || "";
 
-    //   // Swap panel visibility matrices
-    //   landingView.classList.remove("active");
-    //   outputView.classList.add("active");
+      // Swap panel visibility matrices
+      landingView.classList.remove("active");
+      outputView.classList.add("active");
 
-    //   // Initialize primary and core score ring gauges via shared layout functions
-    //   new FACTGauge("mainGaugeContainer", { score: result.deceptive_score, size: 120, strokeWidth: 10 });
-    //   new FACTGauge("urgencyGaugeContainer", { score: result.urgency_score, size: 70, strokeWidth: 7 });
-    //   new FACTGauge("inflationGaugeContainer", { score: result.inflation_score, size: 70, strokeWidth: 7 });
+      // Initialize primary and core score ring gauges via shared layout functions
+      new FACTGauge("mainGaugeContainer", { score: result.deceptive_score, size: 120, strokeWidth: 10 });
+      new FACTGauge("urgencyGaugeContainer", { score: result.urgency_score, size: 70, strokeWidth: 7 });
+      new FACTGauge("inflationGaugeContainer", { score: result.inflation_score, size: 70, strokeWidth: 7 });
 
-    //   // Build temporal trend charts using custom vector generation paths
-    //   new FACTChart("historyChartContainer", result.price_history);
+      // Build temporal trend charts using custom vector generation paths
+      new FACTChart("historyChartContainer", result.price_history);
 
-    // } catch (error) {
-    //   console.error("Pipeline failure: ", error);
-    //   alert("FACT Core Failure: Unable to compute pricing matrices. Check local backend hosting.");
-    // } finally {
-    //   submitBtn.disabled = false;
-    //   submitBtn.innerText = "Generate Report";
-    // }
+    } catch (error) {
+      console.error("Pipeline failure: ", error);
+      alert("FACT Core Failure: Unable to compute pricing matrices. Check local backend hosting.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Generate Report";
+    }
 
-    // --- FRONTEND MOCK DATA TEST INSERT ---
-    const result = {
-      "status": "success",
-      "deceptive_score": 9.0,
-      "urgency_score": 8.7,
-      "inflation_score": 7.2,
-      "price_history": [180, 310, 240, 80, 210, 215, 185],
-      "complaint_template": "To,\nThe Department of Commerce, Supplies and Consumer Protection (DoCSCP)\nBabarmahal, Kathmandu, Nepal.\n\nSubject: Formal Complaint Against Deceptive Pricing under the Consumer Protection Act 2075.\n\nDear Sir/Madam,\nI am writing to log an official complaint regarding deceptive anchor pricing on the product listed under ID: 987654321. The vendor has artificially inflated the baseline value to fabricate false markdown claims..."
-    };
+    // // --- FRONTEND MOCK DATA TEST INSERT ---
+    // const result = {
+    //   "status": "success",
+    //   "deceptive_score": 9.0,
+    //   "urgency_score": 8.7,
+    //   "inflation_score": 7.2,
+    //   "price_history": [180, 310, 240, 80, 210, 215, 185],
+    //   "complaint_template": "To,\nThe Department of Commerce, Supplies and Consumer Protection (DoCSCP)\nBabarmahal, Kathmandu, Nepal.\n\nSubject: Formal Complaint Against Deceptive Pricing under the Consumer Protection Act 2075.\n\nDear Sir/Madam,\nI am writing to log an official complaint regarding deceptive anchor pricing on the product listed under ID: 987654321. The vendor has artificially inflated the baseline value to fabricate false markdown claims..."
+    // };
 
-    // The remaining UI layout code stays exactly as it is:
-    generatedTemplate = result.complaint_template || "";
-    landingView.classList.remove("active");
-    outputView.classList.add("active");
+    // // The remaining UI layout code stays exactly as it is:
+    // generatedTemplate = result.complaint_template || "";
+    // landingView.classList.remove("active");
+    // outputView.classList.add("active");
 
-    new FACTGauge("mainGaugeContainer", { score: result.deceptive_score, size: 120, strokeWidth: 10 });
-    new FACTGauge("urgencyGaugeContainer", { score: result.urgency_score, size: 70, strokeWidth: 7 });
-    new FACTGauge("inflationGaugeContainer", { score: result.inflation_score, size: 70, strokeWidth: 7 });
-    new FACTChart("historyChartContainer", result.price_history);
-    // --- END MOCK DATA INSERT ---
+    // new FACTGauge("mainGaugeContainer", { score: result.deceptive_score, size: 120, strokeWidth: 10 });
+    // new FACTGauge("urgencyGaugeContainer", { score: result.urgency_score, size: 70, strokeWidth: 7 });
+    // new FACTGauge("inflationGaugeContainer", { score: result.inflation_score, size: 70, strokeWidth: 7 });
+    // new FACTChart("historyChartContainer", result.price_history);
+    // // --- END MOCK DATA INSERT ---
   });
 
   // 4. Automated Legal Complaints Generation Pipeline
