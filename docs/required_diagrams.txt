@@ -1,3 +1,0 @@
-system_architecture.png
-flowchart.png
-gantt_chart.png
