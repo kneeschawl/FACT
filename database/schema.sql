@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS scraped_products (
     actual_price DECIMAL(10, 2) NOT NULL,
     discount_percentage DECIMAL(5, 2) DEFAULT 0.00,
     discounted_price DECIMAL(10, 2) NOT NULL,
-    claimed_anchor VARCHAR(255),
+    claimed_anchor DECIMAL(10,2),
     urgency_text TEXT,
     INDEX idx_product_id (product_id),
     INDEX idx_actual_price (actual_price)
