@@ -4,7 +4,7 @@ USE fiscal_db;
 
 CREATE TABLE IF NOT EXISTS scraped_products (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    timestamp_recorded DATETIME NOT NULL,
+    scraped_at DATE NOT NULL,
     product_id VARCHAR(100) NOT NULL,
     source_url TEXT NOT NULL,
     product_name VARCHAR(255) NOT NULL,
