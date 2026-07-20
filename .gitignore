@@ -7,3 +7,4 @@ dark_pattern_model.pt
 __pycache__
 .env
 *.csv
+*.tsv
